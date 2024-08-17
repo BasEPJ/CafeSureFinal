@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café del sur'e</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chewy&display=swap">
+    
+    <style>
+        body {
+            background-image: url("{% static 'imagen/fondoo.png' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+        }
+        .titulo, .subtitulo {
+            text-align: left;
+            margin: 20px;
+        }
+        .titulo {
+            font-size: 3rem; /* Ajustar tamaño del título */
+        }
+        .subtitulo {
+            font-size: 1.5rem;
+        }
+        .carousel {
+            width: 100%;
+        }
+        .carousel-inner img {
+            width: 100%;
+            height: 300px; /* Fijar altura de las imágenes */
+            object-fit: cover; /* Ajustar la imagen al contenedor */
+        }
+        .boton {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <!-- Espacio para la imagen -->
+        <div class="col-md-1">
+            <a href="{% url 'inicio' %}">
+                <img src="{% static 'imagen/logo.png' %}" alt="Logo" class="img-fluid logo">
+            </a>
+        </div>
+        <div class="col-md-1">
+            <img src="{% static 'imagen/linea.png' %}" alt="Linea" class="img-fluid linea">
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'menu' %}" style="color: #ffffff";>MENÚ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'canjeoPuntos' %}" style="color: #ffffff";>BENEFICIOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'fotos' %}" style="color: #ffffff";>FOTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contactanos' %}" style="color: #ffffff";>CONTACTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'shop_product' %}" style="color: #ffffff";>ENCARGOS</a>
+                </li>
+                <!-- Segundo LOCALIZAR TIENDA visible solo en pantallas pequeñas -->
+                <li class="nav-item d-block d-lg-none">
+                    <a class="nav-link" href="{% url 'ubicacion' %}" style="white-space: nowrap; color: #ffffff"><Label></Label>LOCALIZAR TIENDA</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-1">
+            <br>
+        </div>
+        <div class="col-md-1">
+            <li class="nav-item d-none d-lg-block">
+                <!-- Espacio para LOCALIZAR TIENDA (Pantalla Completa) -->
+                <a class="nav-link active" href="{% url 'ubicacion' %}" style="color: #ffffff; margin-right: 1%;"><Label></Label>LOCALIZAR TIENDA</a>
+            </li>
+        </div> 
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="titulo">Café del sur'e</div>
+                <div class="subtitulo">
+                    {% if 'cliente' in request.session %}
+                        <p>Bienvenido, {{ nombre_cliente }}, a nuestro</p>
+                    {% else %}
+                        <p>Bienvenido a nuestro</p>
+                    {% endif %}
+                </div>
+                <div class="subtitulo"> Emprendimiento familiar pensado en estudiantes y <br>trabajadores de la zona Valdiviana</div>
+                
+                {% if 'cliente' not in request.session %}
+                <div class="boton">
+                    <a class="btn btn-primary" href="{% url 'sesionCliente' %}" style="background-color: brown; border-color: brown;">Iniciar sesión :D</a>
+                </div>
+                {% endif %}
+                
+                {% if 'cliente' in request.session %}
+                <div class="boton">
+                    <form method="post" action="{% url 'cerrarSesionCliente' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary" style="background-color: brown; border-color: brown;">Cerrar sesión</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+
+                
+
+            <div class="col-md-4">
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img class="d-block w-100" src="{% static 'imagen/img1.jpg' %}" alt="First slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="{% static 'imagen/img2.jpg' %}" alt="Second slide">
+                        </div>
+                        <div class="carousel-item">
+                            <img class="d-block w-100" src="{% static 'imagen/img3.jpg' %}" alt="Third slide">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

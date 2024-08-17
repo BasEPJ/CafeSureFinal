@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+
+    <!-- Font Awesome link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- CSS link -->
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header_body">
+            <a href="{% url 'index' %}" class="logo">TechnoBling</a>
+            <nav class="navbar">
+                <a href="{% url 'index' %}">Add Products</a>
+                <a href="{% url 'view_products' %}">View Products</a>
+                <a href="{% url 'shop_product' %}">Shopit</a>
+            </nav>
+
+            <!-- Adding cart icon -->
+            <a href="{% url 'cart' %}" class="cart"><i class="fa-solid fa-cart-shopping"></i> <span><sup>{{ cart_count }}</sup></span> </a>
+
+            <div id="menu-btn" class="fas fa-bars"></div>
+        </div>
+    </header>

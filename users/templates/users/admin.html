@@ -1,0 +1,28 @@
+{% extends "users/base.html" %}
+{% block title %} Home Page {% endblock title%}
+{% block content %}
+    <div class="jumbotron">
+        {% if request.user.is_authenticated %}
+            <h1 class="display-4">{{ user.username }} Bienvenido</h1>
+        {% else %}
+            <h1 class="display-4">Bienvenido, {{user.first_name.title|default:'Invitado'}}</h1>
+        {% endif %}
+        <p class="lead">
+            Aqui podras iniciar sesion y crear una cuenta en nuestro sitio.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            {% if user.is_authenticated %}
+                <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-lg" style="background:rgb(84, 84, 236); border:none; padding:0 3 2;">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Iniciar sesion</a>
+            {% endif %}
+        </p>
+    </div>
+
+{% endblock content %}

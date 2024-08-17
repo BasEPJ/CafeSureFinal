@@ -1,0 +1,303 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café del sur'e</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chewy&display=swap">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<script>
+    
+    $(document).ready(function() {
+      // Variables
+      const baseDeDatos = [
+          {
+              id: 1,
+              nombre: 'Pastel de chocolate',
+              precio: 5000,
+              imagen: "{% static 'imagen/pastel-chocolate.png' %}"
+          },
+          {
+              id: 2,
+              nombre: 'cafe',
+              precio: 1500,
+              imagen: "{% static 'imagen/cafe.png' %}"
+          },
+          {
+              id: 3,
+              nombre: 'Galletas(5)',
+              precio: 2000,
+              imagen: "{% static 'imagen/galletas.png' %}"
+          },
+          {
+              id: 4,
+              nombre: 'Chessecake',
+              precio: 3500,
+              imagen: "{% static 'imagen/chessecake.png' %}"
+          }
+
+      ];
+
+      let carrito = [];
+      const divisa = '$';
+      const DOMitems = document.querySelector('#items');
+      const DOMcarrito = document.querySelector('#carrito');
+      const DOMtotal = document.querySelector('#total');
+      const DOMbotonVaciar = document.querySelector('#boton-vaciar');
+
+      // Funciones
+
+      /**
+      * Dibuja todos los productos a partir de la base de datos
+      */
+      function renderizarProductos() {
+          baseDeDatos.forEach((info) => {
+              // Estructura
+              const miNodo = document.createElement('div');
+              miNodo.classList.add('card', 'col-sm-4');
+              // Body
+              const miNodoCardBody = document.createElement('div');
+              miNodoCardBody.classList.add('card-body');
+              // Titulo
+              const miNodoTitle = document.createElement('h5');
+              miNodoTitle.classList.add('card-title');
+              miNodoTitle.textContent = info.nombre;
+              // Imagen
+              const miNodoImagen = document.createElement('img');
+              miNodoImagen.classList.add('img-fluid');
+              miNodoImagen.setAttribute('src', info.imagen);
+              // Precio
+              const miNodoPrecio = document.createElement('p');
+              miNodoPrecio.classList.add('card-text');
+              miNodoPrecio.textContent = `${divisa}${info.precio}`;
+              // Boton
+              const miNodoBoton = document.createElement('button');
+              miNodoBoton.classList.add('btn', 'btn-primary');
+              miNodoBoton.textContent = '+';
+              miNodoBoton.setAttribute('marcador', info.id);
+              miNodoBoton.addEventListener('click', anyadirProductoAlCarrito);
+
+               // Añadimos el evento onmouseover para cambiar el color de fondo
+              miNodo.addEventListener('mouseover', () => {
+                miNodoCardBody.style.backgroundColor = '#f0f0f0'; // Cambia el fondo al pasar el ratón
+            });
+             // Agregar el evento onmouseout para restaurar el fondo
+             miNodo.addEventListener('mouseout', () => {
+                miNodoCardBody.style.backgroundColor = ''; // Restaura el fondo
+            });
+              // Insertamos
+              miNodoCardBody.appendChild(miNodoImagen);
+              miNodoCardBody.appendChild(miNodoTitle);
+              miNodoCardBody.appendChild(miNodoPrecio);
+              miNodoCardBody.appendChild(miNodoBoton);
+              miNodo.appendChild(miNodoCardBody);
+              DOMitems.appendChild(miNodo);
+          });
+      }
+      
+
+      /**
+      * Evento para añadir un producto al carrito de la compra
+      */
+      function anyadirProductoAlCarrito(evento) {
+          // Anyadimos el Nodo a nuestro carrito
+          carrito.push(evento.target.getAttribute('marcador'))
+          // Actualizamos el carrito
+          renderizarCarrito();
+
+      }
+
+      /**
+      * Dibuja todos los productos guardados en el carrito
+      */
+      function renderizarCarrito() {
+          // Vaciamos todo el html
+          DOMcarrito.textContent = '';
+          // Quitamos los duplicados
+          const carritoSinDuplicados = [...new Set(carrito)];
+          // Generamos los Nodos a partir de carrito
+          carritoSinDuplicados.forEach((item) => {
+              // Obtenemos el item que necesitamos de la variable base de datos
+              const miItem = baseDeDatos.filter((itemBaseDatos) => {
+                  // ¿Coincide las id? Solo puede existir un caso
+                  return itemBaseDatos.id === parseInt(item);
+              });
+              // Cuenta el número de veces que se repite el producto
+              const numeroUnidadesItem = carrito.reduce((total, itemId) => {
+                  // ¿Coincide las id? Incremento el contador, en caso contrario no mantengo
+                  return itemId === item ? total += 1 : total;
+              }, 0);
+              // Creamos el nodo del item del carrito
+              const miNodo = document.createElement('li');
+              miNodo.classList.add('list-group-item', 'text-right', 'mx-2');
+              miNodo.textContent = `${numeroUnidadesItem} x ${miItem[0].nombre} - ${miItem[0].precio}${divisa}`;
+              // Boton de borrar
+              const miBoton = document.createElement('button');
+              miBoton.classList.add('btn', 'btn-danger', 'mx-5');
+              miBoton.textContent = 'X';
+              miBoton.style.marginLeft = '1rem';
+              miBoton.dataset.item = item;
+              miBoton.addEventListener('click', borrarItemCarrito);
+              // Mezclamos nodos
+              miNodo.appendChild(miBoton);
+              DOMcarrito.appendChild(miNodo);
+          });
+         // Renderizamos el precio total en el HTML
+         DOMtotal.textContent = calcularTotal();
+      }
+
+      /**
+      * Evento para borrar un elemento del carrito
+      */
+      function borrarItemCarrito(evento) {
+          // Obtenemos el producto ID que hay en el boton pulsado
+          const id = evento.target.dataset.item;
+          // Borramos todos los productos
+          carrito = carrito.filter((carritoId) => {
+              return carritoId !== id;
+          });
+          // volvemos a renderizar
+          renderizarCarrito();
+      }
+
+      /**
+       * Calcula el precio total teniendo en cuenta los productos repetidos
+       */
+      function calcularTotal() {
+          // Recorremos el array del carrito
+          return carrito.reduce((total, item) => {
+              // De cada elemento obtenemos su precio
+              const miItem = baseDeDatos.filter((itemBaseDatos) => {
+                  return itemBaseDatos.id === parseInt(item);
+              });
+              // Los sumamos al total
+              return total + miItem[0].precio;
+          }, 0).toFixed(2);
+      }
+
+
+
+      /**
+      * Varia el carrito y vuelve a dibujarlo
+      */
+      function vaciarCarrito() {
+            // Usar SweetAlert para confirmar antes de vaciar el carrito
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "¡No podrás revertir esto!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, vaciar carrito"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Vaciar el carrito y mostrar un mensaje de éxito
+                    carrito = [];
+                    renderizarCarrito();
+                    Swal.fire({
+                        title: "¡Vacío!",
+                        text: "Tu carrito ha sido vaciado.",
+                        icon: "success"
+                    });
+                }
+            });
+        }
+
+      // Eventos
+      $('#boton-vaciar').click(function() {
+        console.log('El carrito se vacio');
+        
+        // Llamamos a la función para vaciar el carrito
+        vaciarCarrito();
+            });
+        
+
+      // Inicio
+      renderizarProductos();
+      renderizarCarrito();
+    });
+</script>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <!-- Espacio para la imagen -->
+        <div class="col-md-1">
+            <a href="{% url 'inicio' %}">
+                <img src="{% static 'imagen/logo.png' %}" alt="Logo" class="img-fluid logo">
+            </a>
+        </div>
+        <div class="col-md-1">
+            <img src="{% static 'imagen/linea.png' %}" alt="Linea" class="img-fluid linea">
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'menu' %}" style="color: #ffffff";>MENÚ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'canjeoPuntos' %}" style="color: #ffffff";>BENEFICIOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'fotos' %}" style="color: #ffffff";>FOTOS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contactanos'%}" style="color: #ffffff";>CONTACTO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'shop_product' %}" style="color: #ffffff";>ENCARGOS</a>
+                </li>
+                <!-- Segundo LOCALIZAR TIENDA visible solo en pantallas pequeñas -->
+                <li class="nav-item d-block d-lg-none">
+                    <a class="nav-link" href="{% url 'ubicacion' %}" style="white-space: nowrap; color: #ffffff"><Label></Label>LOCALIZAR TIENDA</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-1">
+            <br>
+        </div>
+        <div class="col-md-1">
+            <li class="nav-item d-none d-lg-block">
+                <!-- Espacio para LOCALIZAR TIENDA (Pantalla Completa) -->
+                <a class="nav-link active" href="{% url 'ubicacion' %}" style="color: #ffffff; margin-right: 1%;"><Label></Label>LOCALIZAR TIENDA</a>
+            </li>
+        </div> 
+    </nav>
+    <h1 style="text-align: unset; margin-left: 10%; margin-top: 1%; color: rgba(135, 61, 40, 255);">Carrito</h1>
+    <br>
+    <div class="container-custom" style="margin-bottom: 40%;">
+        
+            <div class="row">
+                <div class="container">
+                    <div class="row">
+                        <!-- Elementos generados a partir del JSON -->
+                        <main id="items" class="col-sm-8 row"></main>
+                        <!-- Carrito -->
+                        <aside class="col-sm-4">
+                            <!-- Elementos del carrito -->
+                            <ul id="carrito" class="list-group"></ul>
+                            <hr>
+                            <!-- Precio total -->
+                            <p class="text-right"> Total: &dollar;<span id="total"></span></p>
+                            <button id="boton-enviar-carrito" class="btn btn-success">Enviar Carrito</button>
+                            <button id="boton-vaciar" class="btn btn-danger">Vaciar</button>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canjeo de puntos|Café del sur'e</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chewy&display=swap">
+    <!--FUENTES-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Chewy&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap">
+    <!--ICONOS-->
+    <script src="https://kit.fontawesome.com/302ad97639.js" crossorigin="anonymous"></script> 
+    <!--ALERTAS-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <!-- BARRA DE NAVEGACION -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <header class="header">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <!-- Espacio para la imagen -->
+            <div class="col-md-1">
+                <a href="{% url 'inicio' %}">
+                    <img src="{% static 'imagen/logo.png' %}" alt="Logo" class="img-fluid logo">
+                </a>
+            </div>
+            <div class="col-md-1">
+                <img src="{% static 'imagen/linea.png' %}" alt="Linea" class="img-fluid linea">
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'menu' %}" style="color: #ffffff";>MENÚ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'canjeoPuntos' %}" style="color: #ffffff";>BENEFICIOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'fotos' %}" style="color: #ffffff";>FOTOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contactanos' %}" style="color: #ffffff";>CONTACTO</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'shop_product' %}" style="color: #ffffff";>ENCARGOS</a>
+                    </li>
+                    <!-- Segundo LOCALIZAR TIENDA visible solo en pantallas pequeñas -->
+                    <li class="nav-item d-block d-lg-none">
+                        <a class="nav-link" href="{% url 'ubicacion' %}" style="white-space: nowrap; color: #ffffff"><Label></Label>LOCALIZAR TIENDA</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-1">
+                <br>
+            </div>
+            <div class="col-md-1">
+                <li class="nav-item d-none d-lg-block">
+                    <!-- Espacio para LOCALIZAR TIENDA (Pantalla Completa) -->
+                    <a class="nav-link active" href="{% url 'ubicacion' %}" style="color: #ffffff; margin-right: 1%;"><Label></Label>LOCALIZAR TIENDA</a>
+                </li>
+            </div> 
+        </nav>
+    </header>
+    <!--FOTOS-->
+    <div class="pagina-canjeo" style="text-align: left; margin-left:10px">
+        <h1 class="fuente-color" style="position: relative; left: 0 !important; text-align: left !important; margin-top: 20px;">Porque una imagen dice más que mil palabras </h1>
+        <p>Mándanos tus fotos en el café a nuestras redes sociales para mostrarlas aquí!</p>
+        <!-- Gallery -->
+<a href="https://www.instagram.com" target="_blank">
+<div class="row">
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+      <img
+        src="{% static 'imagen/foto1.png' %}"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water"
+      />
+  
+      <img
+        src="{% static 'imagen/foto3.png' %}"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Wintry Mountain Landscape"
+      />
+    </div>
+  
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img
+        src="{% static 'imagen/foto2.png' %}"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Mountains in the Clouds"
+      />
+    </div>
+  
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img
+        src="{% static 'imagen/foto5.png' %}"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Waves at Sea"
+      />
+  
+      <img
+        src="{% static 'imagen/foto6.png' %}"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Yosemite National Park"
+      />
+    </div>
+  </div>
+</a>
+  <!-- Gallery -->
+        </div>
+    </div>
+
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
